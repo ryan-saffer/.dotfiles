@@ -1,0 +1,8 @@
+[core]
+	excludesfile = ~/.gitignore_global
+
+[include]
+	path = ~/.config/git/local.conf
+
+[includeIf "gitdir:~/personal/"]
+	path = ~/.config/git/personal.conf

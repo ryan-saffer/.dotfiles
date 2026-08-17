@@ -1,0 +1,13 @@
+brew "btop"
+brew "bat"
+brew "fd"
+brew "fzf"
+brew "neovim"
+brew "ripgrep"
+brew "starship"
+brew "tmux"
+brew "zsh-autosuggestions"
+brew "zsh-completions"
+brew "zsh-syntax-highlighting"
+
+cask "ghostty"

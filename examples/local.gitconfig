@@ -1,0 +1,6 @@
+# Machine-specific identity and tools belong here.
+# Copy to local/git/config, then rerun init.sh.
+
+[user]
+	name = Your Name
+	email = you@example.com
