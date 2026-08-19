@@ -19,6 +19,7 @@ alias setup="$HOME/.local/bin/tmux-setup"
 alias checkout='git checkout "$(git fuzzy branch)"'
 alias rebase='git rebase "$(git fuzzy branch)"'
 alias merge='git merge "$(git fuzzy branch)"'
+alias gg='lazygit'
 
 _nvim_find_file() {
   local root=$1
