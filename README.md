@@ -48,6 +48,7 @@ cp "$HOME/.dotfiles/examples/local.zsh" "$HOME/.dotfiles/local/zsh/local.zsh"
 cp "$HOME/.dotfiles/examples/local.tmux.conf" "$HOME/.dotfiles/local/tmux/local.conf"
 cp "$HOME/.dotfiles/examples/local.gitconfig" "$HOME/.dotfiles/local/git/config"
 cp "$HOME/.dotfiles/examples/local.opencode.json" "$HOME/.dotfiles/local/opencode/opencode.json"
+cp "$HOME/.dotfiles/examples/local.opencode-v2.json" "$HOME/.dotfiles/local/opencode/opencode-v2.json"
 sh "$HOME/.dotfiles/init.sh"
 ```
 
@@ -100,6 +101,6 @@ Most changes take effect immediately. Restart or reload the relevant application
 
 Authentication databases, caches, logs, downloaded extensions, generated state, and application data are deliberately excluded.
 
-OpenCode is linked entry-by-entry so generated dependencies and authentication state can remain in `~/.config/opencode`. Its ignored `local.json` overlay is loaded through `OPENCODE_CONFIG` for machine-specific MCP servers and instructions.
+OpenCode is linked entry-by-entry so generated dependencies and authentication state can remain in `~/.config/opencode`. Separate ignored `local.json` and `local-v2.json` overlays preserve V1 compatibility while using native V2 configuration.
 
-Run `opencode` without Claude Code authentication, or `opencode-claude` to load `opencode-claude-auth` for that OpenCode process.
+Install the OpenCode 2 beta with `curl -fsSL https://opencode.ai/v2/install | bash -s -- --no-modify-path`. Run `opencode` or `opencode2` for V2, `opencode-v1` for the V1 rollback path, or `opencode-claude` to run V1 with the legacy Claude Code authentication plugin.

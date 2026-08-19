@@ -96,9 +96,24 @@ npx() {
 
 [[ -r "$HOME/.local/bin/env" ]] && source "$HOME/.local/bin/env"
 [[ -r "$HOME/.vite-plus/env" ]] && source "$HOME/.vite-plus/env"
+export PATH="$HOME/.opencode/bin:$PATH"
+
+opencode2() {
+  OPENCODE_CONFIG="$HOME/.config/opencode/local-v2.json" command opencode2 "$@"
+}
+
+opencode() {
+  opencode2 "$@"
+}
+
+opencode-v1() {
+  OPENCODE_CONFIG="$HOME/.config/opencode/local.json" command opencode "$@"
+}
 
 opencode-claude() {
-  OPENCODE_CONFIG_CONTENT='{"plugin":["opencode-claude-auth@latest"]}' opencode "$@"
+  OPENCODE_CONFIG="$HOME/.config/opencode/local.json" \
+    OPENCODE_CONFIG_CONTENT='{"plugin":["opencode-claude-auth@latest"]}' \
+    command opencode "$@"
 }
 
 git-prune-local-gone() {
