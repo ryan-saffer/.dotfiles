@@ -47,7 +47,6 @@ for config_path in "$DOTFILES_DIR"/home/.config/*; do
   [ -e "$config_path" ] || continue
   [ "${config_path##*/}" = "zsh" ] && continue
   [ "${config_path##*/}" = "opencode" ] && continue
-  [ "${config_path##*/}" = "cliamp" ] && continue
   link_path "$config_path" "$HOME/.config/${config_path##*/}"
 done
 
@@ -57,9 +56,6 @@ for opencode_path in "$DOTFILES_DIR"/home/.config/opencode/*; do
   [ -e "$opencode_path" ] || continue
   link_path "$opencode_path" "$HOME/.config/opencode/${opencode_path##*/}"
 done
-
-# CLIamp writes logs and process state beside its config.
-link_path "$DOTFILES_DIR/home/.config/cliamp/config.toml" "$HOME/.config/cliamp/config.toml"
 
 link_path "$DOTFILES_DIR/local/zsh/local.zsh" "$HOME/.config/zsh/local.zsh"
 link_path "$DOTFILES_DIR/local/zsh/secrets.zsh" "$HOME/.config/zsh/secrets.zsh"
