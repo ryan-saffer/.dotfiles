@@ -97,6 +97,15 @@ npx() {
 
 [[ -r "$HOME/.local/bin/env" ]] && source "$HOME/.local/bin/env"
 [[ -r "$HOME/.vite-plus/env" ]] && source "$HOME/.vite-plus/env"
+
+# Expose the default Node to child processes such as Starship without eagerly loading NVM.
+if [[ -r "$NVM_DIR/alias/default" ]]; then
+  nvm_default_version="$(<"$NVM_DIR/alias/default")"
+  nvm_default_bin="$NVM_DIR/versions/node/v${nvm_default_version#v}/bin"
+  [[ -d "$nvm_default_bin" ]] && export PATH="$nvm_default_bin:$PATH"
+  unset nvm_default_version nvm_default_bin
+fi
+
 export PATH="$HOME/.opencode/bin:$PATH"
 
 opencode2() {

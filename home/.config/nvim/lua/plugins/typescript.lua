@@ -36,49 +36,120 @@ local function limit_inlay_hint_length(err, result, ctx, config)
   return default_inlay_hint_handler(err, result, ctx, config)
 end
 
---- The TypeScript server only searches projects it has loaded, and it loads the project
---- owning the file you open. Opening a file in a shared package therefore finds no
---- references from the apps that consume it, because those projects were never loaded.
---- Loading one representative file per app fixes that. See `vim.g.ts_warm_consumers`.
-local warmed = false
+--- The TypeScript server only searches projects it has loaded. In a monorepo this makes
+--- cross-workspace references depend on which files happened to be opened first. Load one
+--- representative file from every TypeScript workspace declared in the root package.json
+--- so references are complete regardless of the initial file. See `vim.g.ts_warm_consumers`.
+local warmed_roots = {}
+
+local ignored_directories = {
+  [".astro"] = true,
+  [".git"] = true,
+  [".sanity"] = true,
+  build = true,
+  dist = true,
+  node_modules = true,
+}
+
+local function is_source_file(name)
+  return name:match("%.tsx?$") ~= nil or name:match("%.jsx?$") ~= nil
+end
 
 local function representative_file(dir)
-  for _, candidate in ipairs({ "src/index.ts", "src/main.ts", "src/main.tsx", "src/app.tsx", "src/index.tsx" }) do
+  for _, candidate in ipairs({
+    "src/index.ts",
+    "src/main.ts",
+    "src/main.tsx",
+    "src/app.tsx",
+    "src/index.tsx",
+    "index.ts",
+    "index.tsx",
+    "main.ts",
+    "main.tsx",
+  }) do
     local path = vim.fs.joinpath(dir, candidate)
     if vim.fn.filereadable(path) == 1 then
       return path
     end
   end
 
-  local found = vim.fs.find(function(name)
-    return name:match("%.tsx?$") ~= nil
-  end, { path = vim.fs.joinpath(dir, "src"), type = "file", limit = 1 })
-  return found[1]
+  -- Some workspaces, such as Sanity Studio, keep source outside src/. Search the
+  -- workspace while avoiding generated output and dependency trees.
+  local directories = { dir }
+  local declaration
+  local index = 1
+  while directories[index] do
+    local current = directories[index]
+    index = index + 1
+    for name, kind in vim.fs.dir(current) do
+      local path = vim.fs.joinpath(current, name)
+      if kind == "file" and is_source_file(name) then
+        if not name:match("%.d%.ts$") then
+          return path
+        end
+        declaration = declaration or path
+      elseif kind == "directory" and not ignored_directories[name] then
+        directories[#directories + 1] = path
+      end
+    end
+  end
+  return declaration
 end
 
-local function warm_consumer_projects(root)
-  if warmed or vim.g.ts_warm_consumers == false then
-    return
-  end
-  warmed = true
-
-  local apps = vim.fs.joinpath(root, "apps")
-  if vim.fn.isdirectory(apps) ~= 1 then
-    return
+local function workspace_directories(root)
+  local package_path = vim.fs.joinpath(root, "package.json")
+  if vim.fn.filereadable(package_path) ~= 1 then
+    return {}
   end
 
-  for name, kind in vim.fs.dir(apps) do
-    if kind == "directory" then
-      local dir = vim.fs.joinpath(apps, name)
-      if vim.fn.filereadable(vim.fs.joinpath(dir, "tsconfig.json")) == 1 then
-        local file = representative_file(dir)
-        if file then
-          -- Loading the buffer triggers an LSP didOpen, which makes the server load that
-          -- project. The buffer stays hidden and unlisted.
-          local bufnr = vim.fn.bufadd(file)
-          vim.fn.setbufvar(bufnr, "&buflisted", 0)
-          vim.fn.bufload(bufnr)
+  local ok, package = pcall(vim.json.decode, table.concat(vim.fn.readfile(package_path), "\n"))
+  if not ok or type(package) ~= "table" then
+    vim.notify("Cannot read workspace configuration from " .. package_path, vim.log.levels.WARN)
+    return {}
+  end
+
+  local patterns = package.workspaces
+  if type(patterns) == "table" and type(patterns.packages) == "table" then
+    patterns = patterns.packages
+  end
+  if type(patterns) ~= "table" then
+    return {}
+  end
+
+  local directories = {}
+  local seen = {}
+  for _, pattern in ipairs(patterns) do
+    if type(pattern) == "string" then
+      for _, path in ipairs(vim.fn.glob(vim.fs.joinpath(root, pattern), false, true)) do
+        path = vim.fs.normalize(path)
+        if not seen[path] and vim.fn.isdirectory(path) == 1 then
+          seen[path] = true
+          directories[#directories + 1] = path
         end
+      end
+    end
+  end
+  table.sort(directories)
+  return directories
+end
+
+local function warm_workspace_projects(root)
+  if warmed_roots[root] or vim.g.ts_warm_consumers == false then
+    return
+  end
+  warmed_roots[root] = true
+
+  for _, dir in ipairs(workspace_directories(root)) do
+    if vim.fn.filereadable(vim.fs.joinpath(dir, "tsconfig.json")) == 1 then
+      local file = representative_file(dir)
+      if file then
+        -- Loading the buffer triggers an LSP didOpen, which makes the server load that
+        -- project. The buffer stays hidden and unlisted.
+        local bufnr = vim.fn.bufadd(file)
+        vim.fn.setbufvar(bufnr, "&buflisted", 0)
+        vim.fn.bufload(bufnr)
+      else
+        vim.notify("Cannot warm TypeScript workspace without a source file: " .. dir, vim.log.levels.WARN)
       end
     end
   end
@@ -139,12 +210,9 @@ return {
           end
 
           local root = client.config.root_dir
-          local file = vim.api.nvim_buf_get_name(event.buf)
-          -- Only needed when starting inside a shared package; opening an app file
-          -- already loads that app's project.
-          if root and file:find(vim.fs.joinpath(root, "packages"), 1, true) == 1 then
+          if root then
             vim.schedule(function()
-              warm_consumer_projects(root)
+              warm_workspace_projects(root)
             end)
           end
         end,
