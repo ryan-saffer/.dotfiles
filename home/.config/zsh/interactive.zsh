@@ -36,6 +36,21 @@ bindkey -e
 if (( $+commands[fzf] )); then
   # fzf 0.74.2 tries to restore zsh's read-only `zle` option after setup.
   eval "$(fzf --zsh)" 2>/dev/null
+
+  _vfh_leader_widget() {
+    if [[ "$BUFFER" == ' ' && "$CURSOR" -eq 1 ]]; then
+      BUFFER=''
+      CURSOR=0
+      zle -I
+      vfh
+      zle reset-prompt
+      return
+    fi
+
+    LBUFFER+=' '
+  }
+  zle -N _vfh_leader_widget
+  bindkey ' ' _vfh_leader_widget
 fi
 
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#ff00ff,bg=cyan,bold,underline'

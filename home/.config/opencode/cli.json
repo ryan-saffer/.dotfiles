@@ -1,0 +1,27 @@
+{
+  "keybinds": {
+    "input.submit": "ctrl+return",
+    "input.newline": "return",
+    "prompt.skills": "ctrl+k"
+  },
+  "theme": {
+    "name": "synthwave84"
+  },
+  "debug": {
+    "devtools": false
+  },
+  "session": {
+    "markdown": "rendered"
+  },
+  "tabs": {
+    "enabled": false,
+    "scope": "global",
+    "layout": "horizontal"
+  },
+  "diffs": {
+    "view": "split"
+  },
+  "terminal": {
+    "copy": "select"
+  }
+}

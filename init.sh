@@ -38,6 +38,7 @@ link_path "$DOTFILES_DIR/home/.zshrc" "$HOME/.zshrc"
 link_path "$DOTFILES_DIR/home/.tmux.conf" "$HOME/.tmux.conf"
 link_path "$DOTFILES_DIR/home/.gitconfig" "$HOME/.gitconfig"
 link_path "$DOTFILES_DIR/home/.gitignore_global" "$HOME/.gitignore_global"
+link_path "$DOTFILES_DIR/home/.agents/skills" "$HOME/.agents/skills"
 for zsh_path in "$DOTFILES_DIR"/home/.config/zsh/*.zsh; do
   [ -e "$zsh_path" ] || continue
   link_path "$zsh_path" "$HOME/.config/zsh/${zsh_path##*/}"

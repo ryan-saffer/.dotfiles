@@ -6,3 +6,4 @@ source "$HOME/.config/zsh/shared.zsh"
 
 # Interactive integrations load last so local PATH and fpath changes are visible.
 source "$HOME/.config/zsh/interactive.zsh"
+export PATH=$PATH:$HOME/.maestro/bin

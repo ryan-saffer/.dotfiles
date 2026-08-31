@@ -11,6 +11,7 @@ For example:
 ```text
 ~/.zshrc       -> ~/.dotfiles/home/.zshrc
 ~/.tmux.conf   -> ~/.dotfiles/home/.tmux.conf
+~/.agents/skills -> ~/.dotfiles/home/.agents/skills
 ~/.config/nvim -> ~/.dotfiles/home/.config/nvim
 ```
 
@@ -94,6 +95,7 @@ Most changes take effect immediately. Restart or reload the relevant application
 - tmux shared preferences
 - Neovim and its plugin lockfile
 - OpenCode preferences and reusable skills
+- Shared agent skills
 - Ghostty
 - btop
 - neofetch
