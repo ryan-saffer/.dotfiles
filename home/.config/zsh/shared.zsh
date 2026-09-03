@@ -13,6 +13,9 @@ export EDITOR="nvim"
 export VISUAL="nvim"
 export PATH="$HOME/workspace/git-fuzzy/bin:$PATH"
 
+alias ls='eza --icons=auto --group-directories-first'
+alias ll='eza --long --all --header --git --icons=auto --group-directories-first'
+alias tree='eza --tree --icons=auto'
 alias wip='git add . && git commit -m "feat(wip): wip"'
 alias unwip='git reset --soft HEAD~1'
 alias setup="$HOME/.local/bin/tmux-setup"

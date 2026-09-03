@@ -82,6 +82,12 @@ git -C "$HOME/.dotfiles" pull
 
 Most changes take effect immediately. Restart or reload the relevant application when required.
 
+## Listing files
+
+- `ls` uses Eza with icons and directories listed first.
+- `ll` adds hidden files, metadata, headings, and Git status.
+- `tree` displays the current directory as a tree with icons.
+
 ## Finding files
 
 - `vf` searches the current directory with FZF and opens the selected file in Neovim.

@@ -1,5 +1,6 @@
 brew "btop"
 brew "bat"
+brew "eza"
 brew "fd"
 brew "fzf"
 brew "neovim"
