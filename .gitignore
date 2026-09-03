@@ -3,3 +3,5 @@
 **/.DS_Store
 /home/.config/cliamp/*
 !/home/.config/cliamp/config.toml
+/home/.config/yazi/flavors/
+/home/.config/yazi/plugins/
