@@ -1,5 +1,5 @@
 mouse-scroll-multiplier=2
-theme = Django Reborn Again
+theme = TokyoNight
 
 # Send a CSI-u Ctrl+Enter sequence so terminal apps can distinguish it from Enter.
 keybind = ctrl+enter=csi:13;5u
