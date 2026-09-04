@@ -38,6 +38,8 @@ mkdir -p "$HOME/workspace"
 git clone https://github.com/bigH/git-fuzzy.git "$HOME/workspace/git-fuzzy"
 ```
 
+Start tmux, then press `Prefix + I` to install the configured TPM plugins.
+
 Run `sh ~/.dotfiles/init.sh` again if an installer replaced one of the managed links.
 
 ## Local configuration
@@ -54,6 +56,10 @@ Rerunning `init.sh` never replaces an existing local file.
 Put machine-specific agent skills under `local/.agents/skills/<skill-name>/`. Shared skills live under `home/.agents/skills/`; `init.sh` links entries from both directories into `~/.agents/skills`, with a local skill taking precedence when names overlap.
 
 Use local configuration for machine paths, work aliases, project-specific tmux sessions, Fastfetch logo art, Git identity, and skills that should not be shared. Because it is intentionally not committed, back it up separately if needed.
+
+tmux uses the shared Nova layout and a Tokyo Night fallback palette. Override any
+`@nova-*` option in `local/tmux/local.conf` to give each machine its own colors;
+`examples/local.tmux.conf` lists the shared palette options.
 
 Git uses the machine-local identity by default and overrides it with `local/git/personal.conf` for every repository under `~/personal/`.
 
