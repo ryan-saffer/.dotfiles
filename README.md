@@ -84,7 +84,7 @@ Most changes take effect immediately. Restart or reload the relevant application
 
 ## Listing files
 
-- `ls` uses Eza with a grid constrained to 60 terminal columns, icons, and directories listed first.
+- `ls` uses Eza with a grid constrained to 80 terminal columns, icons, and directories listed first.
 - `ll` adds hidden files, metadata, headings, and Git status.
 - `tree` displays the current directory as a tree with icons.
 - Eza and Ghostty use matching Tokyo Night colors. Eza's colors live in `~/.config/eza/theme.yml`.

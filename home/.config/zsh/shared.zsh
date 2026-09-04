@@ -15,7 +15,7 @@ export PATH="$HOME/workspace/git-fuzzy/bin:$PATH"
 
 export EZA_CONFIG_DIR="$HOME/.config/eza"
 
-alias ls='eza --grid --width=60 --icons=auto --group-directories-first'
+alias ls='eza --grid --width=80 --icons=auto --group-directories-first'
 alias ll='eza --long --all --header --git --icons=auto --group-directories-first'
 alias tree='eza --tree --icons=auto'
 alias wip='git add . && git commit -m "feat(wip): wip"'
