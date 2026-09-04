@@ -106,6 +106,7 @@ Most changes take effect immediately. Restart or reload the relevant application
 - Eza and Ghostty color themes
 - Yazi theme and package manifest (`ya pkg install` restores downloaded packages)
 - btop
+- CLIamp
 - Fastfetch
 - Shared Git configuration and global ignores
 
