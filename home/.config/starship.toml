@@ -28,6 +28,7 @@ $pixi\
 [](fg:color_bg3 bg:color_bg1)\
 $time\
 [ ](fg:color_bg1)\
+${custom.firebase}\
 $line_break$character"""
 
 palette = 'bubblegum'
@@ -39,6 +40,7 @@ color_bg3 = '#073b4c'
 color_blue = '#118ab2'
 color_aqua = '#06d6a0'
 color_green = '#06d6a0'
+color_firebase = '#ffca28'
 color_orange = '#ef476f'
 color_purple = '#ef476f'
 color_red = '#ef476f'
@@ -90,6 +92,41 @@ truncation_symbol = "…/"
 "Music" = "󰝚 "
 "Pictures" = " "
 "Developer" = "󰲋 "
+
+[custom.firebase]
+command = '''
+directory="$PWD"
+while [ "$directory" != / ]; do
+  if [ -f "$directory/firebase.json" ]; then
+    project=""
+    if [ -r "$HOME/.config/configstore/firebase-tools.json" ]; then
+      project=$(jq -r --arg directory "$directory" '.activeProjects[$directory] // empty' "$HOME/.config/configstore/firebase-tools.json")
+    fi
+    if [ -z "$project" ] && [ -r "$directory/.firebaserc" ]; then
+      project=$(jq -r '.projects.default // empty' "$directory/.firebaserc")
+    fi
+    [ -n "$project" ] || project="Firebase"
+    printf '%s' "$project"
+    exit 0
+  fi
+  directory=${directory%/*}
+  [ -n "$directory" ] || directory=/
+done
+exit 1
+'''
+when = '''
+directory="$PWD"
+while [ "$directory" != / ]; do
+  [ -f "$directory/firebase.json" ] && exit 0
+  directory=${directory%/*}
+  [ -n "$directory" ] || directory=/
+done
+exit 1
+'''
+shell = ["sh"]
+symbol = ""
+style = "fg:color_fg0 bg:color_firebase"
+format = "[](fg:color_firebase)[ $symbol $output ]($style)[ ](fg:color_firebase)"
 
 [git_branch]
 symbol = ""

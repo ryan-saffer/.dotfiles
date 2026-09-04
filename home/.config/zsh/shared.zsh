@@ -1,3 +1,9 @@
+if [[ -x /opt/homebrew/bin/brew ]]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [[ -x /usr/local/bin/brew ]]; then
+  eval "$(/usr/local/bin/brew shellenv)"
+fi
+
 HISTFILE="$HOME/.zsh_history"
 HISTSIZE=50000
 SAVEHIST=10000
@@ -91,9 +97,11 @@ else
   export NVM_DIR="$HOME/.nvm"
 fi
 _load_nvm() {
+  [[ "${_nvm_loaded:-0}" -eq 1 ]] && return
   [[ -s "$NVM_DIR/nvm.sh" ]] || return 1
   unfunction nvm node npm npx 2>/dev/null
   source "$NVM_DIR/nvm.sh"
+  typeset -g _nvm_loaded=1
 }
 
 nvm() {
@@ -112,15 +120,45 @@ npx() {
   _load_nvm && command npx "$@"
 }
 
+_find_nvmrc() {
+  local directory=$PWD
+
+  while [[ "$directory" != / ]]; do
+    if [[ -r "$directory/.nvmrc" ]]; then
+      REPLY="$directory/.nvmrc"
+      return 0
+    fi
+    directory=${directory:h}
+  done
+
+  return 1
+}
+
+_use_project_node() {
+  local nvmrc_path
+
+  if _find_nvmrc; then
+    nvmrc_path=$REPLY
+    _load_nvm || return
+    nvm use --silent "$(<"$nvmrc_path")"
+  elif [[ -n "${NVM_BIN:-}" ]]; then
+    [[ "$(nvm current)" == "$(nvm version default)" ]] || nvm use --silent default
+  fi
+}
+
+autoload -Uz add-zsh-hook
+add-zsh-hook chpwd _use_project_node
+_use_project_node
+
 [[ -r "$HOME/.local/bin/env" ]] && source "$HOME/.local/bin/env"
 [[ -r "$HOME/.vite-plus/env" ]] && source "$HOME/.vite-plus/env"
 
 # Expose the default Node to child processes such as Starship without eagerly loading NVM.
 if [[ -r "$NVM_DIR/alias/default" ]]; then
   nvm_default_version="$(<"$NVM_DIR/alias/default")"
-  nvm_default_bin="$NVM_DIR/versions/node/v${nvm_default_version#v}/bin"
-  [[ -d "$nvm_default_bin" ]] && export PATH="$nvm_default_bin:$PATH"
-  unset nvm_default_version nvm_default_bin
+  nvm_default_bins=("$NVM_DIR"/versions/node/v${nvm_default_version#v}*/bin(NnOn))
+  [[ -n "${nvm_default_bins[1]:-}" ]] && export PATH="${nvm_default_bins[1]}:$PATH"
+  unset nvm_default_version nvm_default_bins
 fi
 
 export PATH="$HOME/.opencode/bin:$PATH"
