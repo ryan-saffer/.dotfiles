@@ -50,6 +50,18 @@ vfh() {
   _nvim_find_file "$HOME" --exclude Library --exclude .cache --exclude .Trash
 }
 
+cdh() {
+  local selected
+  selected=$(fd --type d --hidden --exclude .git --exclude node_modules . / 2>/dev/null |
+    fzf \
+      --prompt='Change directory > ' \
+      --height=80% \
+      --layout=reverse \
+      --border) || return
+
+  [[ -n "$selected" ]] && builtin cd -- "$selected"
+}
+
 alias f='vf'
 
 export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git"

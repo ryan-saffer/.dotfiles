@@ -94,6 +94,7 @@ Most changes take effect immediately. Restart or reload the relevant application
 - `vf` searches the current directory with FZF and opens the selected file in Neovim.
 - `vf path/to/search` searches a specific directory.
 - `vfh` searches your home directory while skipping caches and macOS application data.
+- `cdh` searches directories recursively from the filesystem root with FZF and changes to the selected directory.
 - Type `nvim ` and press `Ctrl+T` to insert an FZF-selected file into the current command.
 
 ## Managed configuration
