@@ -84,7 +84,7 @@ Most changes take effect immediately. Restart or reload the relevant application
 
 ## Listing files
 
-- `ls` uses Eza with icons and directories listed first.
+- `ls` uses Eza with one item per line, icons, and directories listed first.
 - `ll` adds hidden files, metadata, headings, and Git status.
 - `tree` displays the current directory as a tree with icons.
 - Eza and Ghostty use matching Tokyo Night colors. Eza's colors live in `~/.config/eza/theme.yml`.
