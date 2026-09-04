@@ -11,7 +11,8 @@ For example:
 ```text
 ~/.zshrc       -> ~/.dotfiles/home/.zshrc
 ~/.tmux.conf   -> ~/.dotfiles/home/.tmux.conf
-~/.agents/skills -> ~/.dotfiles/home/.agents/skills
+~/.agents/skills/tdd -> ~/.dotfiles/home/.agents/skills/tdd
+~/.agents/skills/mempalace -> ~/.dotfiles/local/.agents/skills/mempalace
 ~/.config/nvim -> ~/.dotfiles/home/.config/nvim
 ```
 
@@ -44,7 +45,8 @@ Everything under `local/` is ignored by Git and exists only on the current machi
 
 ```sh
 mkdir -p "$HOME/.dotfiles/local/zsh" "$HOME/.dotfiles/local/tmux" \
-  "$HOME/.dotfiles/local/git" "$HOME/.dotfiles/local/opencode"
+  "$HOME/.dotfiles/local/git" "$HOME/.dotfiles/local/opencode" \
+  "$HOME/.dotfiles/local/.agents/skills"
 cp "$HOME/.dotfiles/examples/local.zsh" "$HOME/.dotfiles/local/zsh/local.zsh"
 cp "$HOME/.dotfiles/examples/local.tmux.conf" "$HOME/.dotfiles/local/tmux/local.conf"
 cp "$HOME/.dotfiles/examples/local.gitconfig" "$HOME/.dotfiles/local/git/config"
@@ -53,7 +55,9 @@ cp "$HOME/.dotfiles/examples/local.opencode-v2.json" "$HOME/.dotfiles/local/open
 sh "$HOME/.dotfiles/init.sh"
 ```
 
-Use these files for machine paths, work aliases, project-specific tmux sessions, and Git identity. Because they are intentionally not committed, back them up separately if needed.
+Put machine-specific agent skills under `local/.agents/skills/<skill-name>/`. Shared skills live under `home/.agents/skills/`; `init.sh` links entries from both directories into `~/.agents/skills`, with a local skill taking precedence when names overlap.
+
+Use local configuration for machine paths, work aliases, project-specific tmux sessions, Git identity, and skills that should not be shared. Because it is intentionally not committed, back it up separately if needed.
 
 Git uses the machine-local identity by default and overrides it with `local/git/personal.conf` for every repository under `~/personal/`.
 
@@ -107,7 +111,7 @@ Most changes take effect immediately. Restart or reload the relevant application
 - Eza and Ghostty color themes
 - Yazi theme and package manifest (`ya pkg install` restores downloaded packages)
 - btop
-- neofetch
+- Fastfetch
 - Shared Git configuration and global ignores
 
 Authentication databases, caches, logs, downloaded extensions, generated state, and application data are deliberately excluded.

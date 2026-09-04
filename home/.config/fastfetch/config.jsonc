@@ -1,0 +1,166 @@
+{
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/master/doc/json_schema.json",
+  "logo": {
+    "type": "file",
+    "source": "~/.config/fastfetch/kick.txt",
+    "color": {
+      "1": "#53FC18",
+      "2": "#051F14"
+    },
+    "padding": {
+      "right": 2
+    }
+  },
+  "display": {
+    "separator": " ",
+    "color": {
+      "output": "white"
+    },
+    "key": {
+      "width": 0
+    },
+    "size": {
+      "maxPrefix": "MB",
+      "ndigits": 0,
+      "spaceBeforeUnit": "never"
+    },
+    "bar": {
+      "char": {
+        "elapsed": "━",
+        "total": "─"
+      },
+      "border": {
+        "left": "[",
+        "right": "]"
+      },
+      "color": {
+        "elapsed": "#53FC18",
+        "total": "@8",
+        "border": "white"
+      },
+      "width": 15
+    },
+    "percent": {
+      "type": ["num", "bar"],
+      "color": {
+        "green": "white",
+        "yellow": "white",
+        "red": "white"
+      }
+    }
+  },
+  "modules": [
+    "break",
+    "break",
+    "break",
+    {
+      "type": "os",
+      "key": " ╭─",
+      "keyColor": "#53FC18",
+      "format": "{name} {version} {build-id} {arch}"
+    },
+    {
+      "type": "kernel",
+      "key": " ├─",
+      "keyColor": "#53FC18",
+      "format": "{release}"
+    },
+    {
+      "type": "users",
+      "key": " ├─",
+      "keyColor": "#53FC18",
+      "format": "{name}",
+      "myselfOnly": true
+    },
+    {
+      "type": "packages",
+      "key": " ├─󰏗",
+      "keyColor": "#53FC18",
+      "format": "{brew} (brew)"
+    },
+    {
+      "type": "shell",
+      "key": " ╰─",
+      "keyColor": "#53FC18",
+      "format": "{process-name} {version}"
+    },
+    "break",
+    {
+      "type": "custom",
+      "key": " ╭─",
+      "keyColor": "1;33",
+      "format": "Aqua",
+      "condition": {
+        "system": "macOS"
+      }
+    },
+    {
+      "type": "de",
+      "key": " ╭─",
+      "keyColor": "1;33",
+      "condition": {
+        "!system": "macOS"
+      }
+    },
+    {
+      "type": "wm",
+      "key": " ├─",
+      "keyColor": "1;33",
+      "format": "{?plugin-name}{plugin-name}{?}{/plugin-name}{pretty-name}{/}"
+    },
+    {
+      "type": "terminal",
+      "key": " ╰─",
+      "keyColor": "1;33",
+      "format": "{pretty-name}"
+    },
+    "break",
+    {
+      "type": "host",
+      "key": " ╭─",
+      "keyColor": "#1BE9FB",
+      "format": "{family}"
+    },
+    {
+      "type": "cpu",
+      "key": " ├─󰍛",
+      "keyColor": "#1BE9FB",
+      "format": "{name}"
+    },
+    {
+      "type": "gpu",
+      "key": " ├─󰍹",
+      "keyColor": "#1BE9FB",
+      "format": "{name}"
+    },
+    {
+      "type": "display",
+      "key": " ├─",
+      "keyColor": "#1BE9FB",
+      "compactType": "scaled-with-refresh-rate"
+    },
+    {
+      "type": "memory",
+      "key": " ├─",
+      "keyColor": "#1BE9FB",
+      "format": "{percentage-bar} {used} / {total} ({percentage})"
+    },
+    {
+      "type": "battery",
+      "key": " ├─󰁹",
+      "keyColor": "#1BE9FB",
+      "format": "{capacity-bar} {capacity}"
+    },
+    {
+      "type": "uptime",
+      "key": " ╰─󰄉",
+      "keyColor": "#1BE9FB",
+      "format": "{formatted}"
+    },
+    "break",
+    {
+      "type": "custom",
+      "format": "{#1;90}──{#1;31}────{#1;32}────{#1;33}────{#1;34}────{#1;35}────{#1;36}────{#1;37}──{#}"
+    }
+  ]
+}

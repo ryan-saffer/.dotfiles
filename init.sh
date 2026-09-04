@@ -34,11 +34,48 @@ link_path() {
   printf 'link    %s -> %s\n' "$target_path" "$source_path"
 }
 
+prepare_directory() {
+  target_path=$1
+
+  if [ -d "$target_path" ] && [ ! -L "$target_path" ]; then
+    return
+  fi
+
+  mkdir -p "$(dirname "$target_path")"
+
+  if [ -e "$target_path" ] || [ -L "$target_path" ]; then
+    relative_path=${target_path#"$HOME"/}
+    backup_path="$BACKUP_DIR/$relative_path"
+    mkdir -p "$(dirname "$backup_path")"
+    mv "$target_path" "$backup_path"
+    BACKED_UP=1
+    printf 'backup  %s -> %s\n' "$target_path" "$backup_path"
+  fi
+
+  mkdir -p "$target_path"
+}
+
 link_path "$DOTFILES_DIR/home/.zshrc" "$HOME/.zshrc"
 link_path "$DOTFILES_DIR/home/.tmux.conf" "$HOME/.tmux.conf"
 link_path "$DOTFILES_DIR/home/.gitconfig" "$HOME/.gitconfig"
 link_path "$DOTFILES_DIR/home/.gitignore_global" "$HOME/.gitignore_global"
-link_path "$DOTFILES_DIR/home/.agents/skills" "$HOME/.agents/skills"
+
+# Link skills entry-by-entry so shared and machine-local skills can coexist.
+# A local skill with the same name overrides its shared counterpart.
+prepare_directory "$HOME/.agents/skills"
+for skill_path in "$DOTFILES_DIR"/home/.agents/skills/*; do
+  [ -e "$skill_path" ] || continue
+  skill_name=${skill_path##*/}
+  if [ -e "$DOTFILES_DIR/local/.agents/skills/$skill_name" ]; then
+    continue
+  fi
+  link_path "$skill_path" "$HOME/.agents/skills/$skill_name"
+done
+for skill_path in "$DOTFILES_DIR"/local/.agents/skills/*; do
+  [ -e "$skill_path" ] || continue
+  link_path "$skill_path" "$HOME/.agents/skills/${skill_path##*/}"
+done
+
 for zsh_path in "$DOTFILES_DIR"/home/.config/zsh/*.zsh; do
   [ -e "$zsh_path" ] || continue
   link_path "$zsh_path" "$HOME/.config/zsh/${zsh_path##*/}"
