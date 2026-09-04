@@ -6,6 +6,51 @@ DOTFILES_DIR=$(CDPATH= cd "$(dirname "$0")" && pwd)
 BACKUP_DIR=${DOTFILES_BACKUP_DIR:-"$HOME/.dotfiles-backup/$(date +%Y%m%d-%H%M%S)"}
 BACKED_UP=0
 
+ensure_local_directory() {
+  directory_path=$1
+
+  if [ -d "$directory_path" ]; then
+    return
+  fi
+
+  if [ -e "$directory_path" ] || [ -L "$directory_path" ]; then
+    printf 'error   %s exists and is not a directory\n' "$directory_path" >&2
+    return 1
+  fi
+
+  mkdir -p "$directory_path"
+  printf 'create  %s/\n' "$directory_path"
+}
+
+ensure_local_file() {
+  file_path=$1
+  template_path=${2:-}
+  file_mode=${3:-}
+
+  if [ -e "$file_path" ] || [ -L "$file_path" ]; then
+    return
+  fi
+
+  mkdir -p "$(dirname "$file_path")"
+
+  if [ -n "$template_path" ]; then
+    if [ ! -f "$template_path" ]; then
+      printf 'error   missing local template %s\n' "$template_path" >&2
+      return 1
+    fi
+
+    cp "$template_path" "$file_path"
+  else
+    : > "$file_path"
+  fi
+
+  if [ -n "$file_mode" ]; then
+    chmod "$file_mode" "$file_path"
+  fi
+
+  printf 'create  %s\n' "$file_path"
+}
+
 link_path() {
   source_path=$1
   target_path=$2
@@ -55,6 +100,20 @@ prepare_directory() {
   mkdir -p "$target_path"
 }
 
+# Bootstrap ignored machine-local configuration on a fresh clone. Existing
+# local files are never changed.
+ensure_local_directory "$DOTFILES_DIR/local/.agents/skills"
+ensure_local_directory "$DOTFILES_DIR/local/bin"
+ensure_local_file "$DOTFILES_DIR/local/zsh/local.zsh" "$DOTFILES_DIR/examples/local.zsh"
+ensure_local_file "$DOTFILES_DIR/local/zsh/secrets.zsh" "$DOTFILES_DIR/examples/secrets.zsh" 600
+ensure_local_file "$DOTFILES_DIR/local/tmux/local.conf" "$DOTFILES_DIR/examples/local.tmux.conf"
+ensure_local_file "$DOTFILES_DIR/local/git/config" "$DOTFILES_DIR/examples/local.gitconfig"
+ensure_local_file "$DOTFILES_DIR/local/git/personal.conf" "$DOTFILES_DIR/examples/local.gitconfig"
+ensure_local_file "$DOTFILES_DIR/local/opencode/opencode.json" "$DOTFILES_DIR/examples/local.opencode.json"
+ensure_local_file "$DOTFILES_DIR/local/opencode/opencode-v2.json" "$DOTFILES_DIR/examples/local.opencode-v2.json"
+ensure_local_file "$DOTFILES_DIR/local/opencode/datadog.md"
+ensure_local_file "$DOTFILES_DIR/local/bin/tmux-setup" "$DOTFILES_DIR/examples/tmux-setup" 755
+
 link_path "$DOTFILES_DIR/home/.zshrc" "$HOME/.zshrc"
 link_path "$DOTFILES_DIR/home/.tmux.conf" "$HOME/.tmux.conf"
 link_path "$DOTFILES_DIR/home/.gitconfig" "$HOME/.gitconfig"
@@ -102,8 +161,8 @@ link_path "$DOTFILES_DIR/local/git/config" "$HOME/.config/git/local.conf"
 link_path "$DOTFILES_DIR/local/git/personal.conf" "$HOME/.config/git/personal.conf"
 link_path "$DOTFILES_DIR/local/opencode/opencode.json" "$HOME/.config/opencode/local.json"
 link_path "$DOTFILES_DIR/local/opencode/opencode-v2.json" "$HOME/.config/opencode/local-v2.json"
-link_path "$DOTFILES_DIR/local/opencode/AGENTS.md" "$HOME/.config/opencode/AGENTS.md"
 link_path "$DOTFILES_DIR/local/opencode/datadog.md" "$HOME/.config/opencode/datadog.md"
+link_path "$DOTFILES_DIR/local/opencode/datadog.md" "$HOME/AGENTS.md"
 
 for script_path in "$DOTFILES_DIR"/local/bin/*; do
   [ -e "$script_path" ] || continue

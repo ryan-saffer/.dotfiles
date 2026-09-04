@@ -1,11 +1,6 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "mcp": {
-    "servers": {
-      "sanity": {
-        "type": "remote",
-        "url": "https://mcp.sanity.io"
-      }
-    }
+    "servers": {}
   }
 }

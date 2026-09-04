@@ -1,6 +1,6 @@
 # Machine-specific identity and tools belong here.
-# Copy to local/git/config, then rerun init.sh.
+# init.sh copies this template to missing local Git config files.
 
-[user]
-	name = Your Name
-	email = you@example.com
+#[user]
+#	name = Your Name
+#	email = you@example.com

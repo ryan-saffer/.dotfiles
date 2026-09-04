@@ -41,19 +41,14 @@ Run `sh ~/.dotfiles/init.sh` again if an installer replaced one of the managed l
 
 ## Local configuration
 
-Everything under `local/` is ignored by Git and exists only on the current machine. Templates live under `examples/`.
+Everything under `local/` is ignored by Git and exists only on the current machine. On its first run, `init.sh` creates the complete local directory structure and starter files. It copies safe defaults from `examples/` where a valid file format is useful and creates the remaining placeholders empty.
 
 ```sh
-mkdir -p "$HOME/.dotfiles/local/zsh" "$HOME/.dotfiles/local/tmux" \
-  "$HOME/.dotfiles/local/git" "$HOME/.dotfiles/local/opencode" \
-  "$HOME/.dotfiles/local/.agents/skills"
-cp "$HOME/.dotfiles/examples/local.zsh" "$HOME/.dotfiles/local/zsh/local.zsh"
-cp "$HOME/.dotfiles/examples/local.tmux.conf" "$HOME/.dotfiles/local/tmux/local.conf"
-cp "$HOME/.dotfiles/examples/local.gitconfig" "$HOME/.dotfiles/local/git/config"
-cp "$HOME/.dotfiles/examples/local.opencode.json" "$HOME/.dotfiles/local/opencode/opencode.json"
-cp "$HOME/.dotfiles/examples/local.opencode-v2.json" "$HOME/.dotfiles/local/opencode/opencode-v2.json"
 sh "$HOME/.dotfiles/init.sh"
+$EDITOR "$HOME/.dotfiles/local/zsh/local.zsh"
 ```
+
+Rerunning `init.sh` never replaces an existing local file.
 
 Put machine-specific agent skills under `local/.agents/skills/<skill-name>/`. Shared skills live under `home/.agents/skills/`; `init.sh` links entries from both directories into `~/.agents/skills`, with a local skill taking precedence when names overlap.
 
@@ -63,7 +58,7 @@ Git uses the machine-local identity by default and overrides it with `local/git/
 
 ## Secrets
 
-Never put credentials in shared or local Git-tracked files. Prefer a password manager; otherwise create `local/zsh/secrets.zsh`, restrict it with `chmod 600`, and rerun `init.sh`.
+Never put credentials in shared or local Git-tracked files. Prefer a password manager; otherwise use the generated `local/zsh/secrets.zsh`. `init.sh` gives that file `600` permissions when it creates it.
 
 This repository is public. Check `git diff --cached` before every commit.
 
