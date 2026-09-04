@@ -97,7 +97,7 @@ truncation_symbol = "…/"
 command = '''
 directory="$PWD"
 while [ "$directory" != / ]; do
-  if [ -f "$directory/firebase.json" ]; then
+  if [ -f "$directory/.firebaserc" ]; then
     project=""
     if [ -r "$HOME/.config/configstore/firebase-tools.json" ]; then
       project=$(jq -r --arg directory "$directory" '.activeProjects[$directory] // empty' "$HOME/.config/configstore/firebase-tools.json")
@@ -117,7 +117,7 @@ exit 1
 when = '''
 directory="$PWD"
 while [ "$directory" != / ]; do
-  [ -f "$directory/firebase.json" ] && exit 0
+  [ -f "$directory/.firebaserc" ] && exit 0
   directory=${directory%/*}
   [ -n "$directory" ] || directory=/
 done
