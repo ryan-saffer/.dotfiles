@@ -14,6 +14,7 @@ For example:
 ~/.agents/skills/tdd -> ~/.dotfiles/home/.agents/skills/tdd
 ~/.agents/skills/mempalace -> ~/.dotfiles/local/.agents/skills/mempalace
 ~/.config/nvim -> ~/.dotfiles/home/.config/nvim
+~/.config/fastfetch/logo.txt -> ~/.dotfiles/local/fastfetch/logo.txt
 ```
 
 The script is safe to rerun. It is normally needed only after the first clone or when a new managed application is added.
@@ -52,7 +53,7 @@ Rerunning `init.sh` never replaces an existing local file.
 
 Put machine-specific agent skills under `local/.agents/skills/<skill-name>/`. Shared skills live under `home/.agents/skills/`; `init.sh` links entries from both directories into `~/.agents/skills`, with a local skill taking precedence when names overlap.
 
-Use local configuration for machine paths, work aliases, project-specific tmux sessions, Git identity, and skills that should not be shared. Because it is intentionally not committed, back it up separately if needed.
+Use local configuration for machine paths, work aliases, project-specific tmux sessions, Fastfetch logo art, Git identity, and skills that should not be shared. Because it is intentionally not committed, back it up separately if needed.
 
 Git uses the machine-local identity by default and overrides it with `local/git/personal.conf` for every repository under `~/personal/`.
 

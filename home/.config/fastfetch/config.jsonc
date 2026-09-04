@@ -2,10 +2,13 @@
   "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/master/doc/json_schema.json",
   "logo": {
     "type": "file",
-    "source": "~/.config/fastfetch/kick.txt",
+    "source": "~/.config/fastfetch/logo.txt",
     "color": {
-      "1": "#53FC18",
-      "2": "#051F14"
+      "1": "#E91271",
+      "2": "#4BC5D9",
+      "3": "#9ECC47",
+      "4": "#B14594",
+      "5": "#E7E8E9"
     },
     "padding": {
       "right": 2

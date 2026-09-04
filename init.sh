@@ -104,6 +104,7 @@ prepare_directory() {
 # local files are never changed.
 ensure_local_directory "$DOTFILES_DIR/local/.agents/skills"
 ensure_local_directory "$DOTFILES_DIR/local/bin"
+ensure_local_directory "$DOTFILES_DIR/local/fastfetch"
 ensure_local_file "$DOTFILES_DIR/local/zsh/local.zsh" "$DOTFILES_DIR/examples/local.zsh"
 ensure_local_file "$DOTFILES_DIR/local/zsh/secrets.zsh" "$DOTFILES_DIR/examples/secrets.zsh" 600
 ensure_local_file "$DOTFILES_DIR/local/tmux/local.conf" "$DOTFILES_DIR/examples/local.tmux.conf"
@@ -113,6 +114,7 @@ ensure_local_file "$DOTFILES_DIR/local/opencode/opencode.json" "$DOTFILES_DIR/ex
 ensure_local_file "$DOTFILES_DIR/local/opencode/opencode-v2.json" "$DOTFILES_DIR/examples/local.opencode-v2.json"
 ensure_local_file "$DOTFILES_DIR/local/opencode/datadog.md"
 ensure_local_file "$DOTFILES_DIR/local/bin/tmux-setup" "$DOTFILES_DIR/examples/tmux-setup" 755
+ensure_local_file "$DOTFILES_DIR/local/fastfetch/logo.txt"
 
 link_path "$DOTFILES_DIR/home/.zshrc" "$HOME/.zshrc"
 link_path "$DOTFILES_DIR/home/.tmux.conf" "$HOME/.tmux.conf"
@@ -144,8 +146,18 @@ for config_path in "$DOTFILES_DIR"/home/.config/*; do
   [ -e "$config_path" ] || continue
   [ "${config_path##*/}" = "zsh" ] && continue
   [ "${config_path##*/}" = "opencode" ] && continue
+  [ "${config_path##*/}" = "fastfetch" ] && continue
   link_path "$config_path" "$HOME/.config/${config_path##*/}"
 done
+
+# Keep the Fastfetch layout shared while allowing each machine to provide its
+# own ignored logo file.
+prepare_directory "$HOME/.config/fastfetch"
+for fastfetch_path in "$DOTFILES_DIR"/home/.config/fastfetch/*; do
+  [ -e "$fastfetch_path" ] || continue
+  link_path "$fastfetch_path" "$HOME/.config/fastfetch/${fastfetch_path##*/}"
+done
+link_path "$DOTFILES_DIR/local/fastfetch/logo.txt" "$HOME/.config/fastfetch/logo.txt"
 
 # OpenCode stores generated dependencies and authentication beside its config,
 # so manage only the explicitly shared entries rather than the whole directory.
